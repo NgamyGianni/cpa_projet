@@ -137,32 +137,36 @@ import supportGUI.Circle;
 			  }
 			  if(R.size() == 3) {
 				  System.out.println("3");
-				  Point p = R.get(0);
-				  Point q = R.get(1);
-				  int x = (int)(p.getX() + q.getX())/2;
-				  int y = (int)(p.getY() + q.getY())/2;
-				  Point center = new Point(x, y);
-				  int radius = (int)Math.sqrt((q.getX()-p.getX())*(q.getX()-p.getX()) + (q.getY()-p.getY())*(q.getY()-p.getY()));
-				  D =  new Circle(center, radius);
+				  D = getCircleFrom3Points(R.get(0), R.get(1), R.get(2));
 			  }
 		  }
 		  
+		  
 		  return D;
+	  }
+	  
+	  private Circle getCircleFrom3Points(Point a, Point b, Point c) {
+		  	double B = b.getX() * b.getX() + b.getY() * b.getY();
+		    double C = c.getX() * c.getX() + c.getY() * c.getY();
+		    double D = b.getX() * c.getY() - b.getY() * c.getX();
+		    
+		    Point center = new Point((int)((c.getY() * B - b.getY() * C) / (2 * D)),
+		             (int)((b.getX() * C - c.getX() * B) / (2 * D))) ;
+		    
+		    //center.setLocation(center.getX()+a.getX(), center.getY() + a.getY());
+		    
+		    return new Circle(center, (int)center.distance(a));
 	  }
 	  
 	  public Circle B_MINIDISK(ArrayList<Point> P, ArrayList<Point> R) {
 		  Circle D = null;
 		  Random random = new Random();
 		  
-		  System.out.println("P = " + P.size());
-		  System.out.println("R = " + R.size());
-
 		  if(P.size() == 0) {
 			  return b_md(P, R);
 		  }else {
 			  	Point p = P.get((random.nextInt(P.size())));
-				//ArrayList<Point> tmpP = new ArrayList<Point>();
-				  
+
 				P.remove(p);
 				System.out.println("P1 = " + P.size());
 				System.out.println("R1 = " + R.size());
@@ -170,7 +174,19 @@ import supportGUI.Circle;
 					
 				if(Math.pow(D.getCenter().getX() - p.getX(), 2) + Math.pow(D.getCenter().getY()-p.getY(), 2) > D.getRadius() * D.getRadius()) {
 					R.add(p);
-					D = B_MINIDISK(P, R);	  
+					if(R.size() > 3) {
+						double miniDist = D.getCenter().distance(R.get(0));
+						int miniIndex = 0;
+						for(int i=1; i<R.size(); i++) {
+							if(D.getCenter().distance(R.get(i)) < miniDist) {
+								miniDist = D.getCenter().distance(R.get(i));
+								miniIndex = i;
+							}
+						}
+						R.remove(miniIndex);
+						//R.remove(R.get(0));
+					}
+					D = B_MINIDISK(P, R);
 				}
 			  
 		  }
@@ -201,6 +217,7 @@ import supportGUI.Circle;
 	
 	      return enveloppe; //ici l'enveloppe n'est pas trie dans le sens trigonometrique, et contient des doublons, mais tant pis!
 	  }
+	  
 	  private double crossProduct(Point p, Point q, Point s, Point t){
 	      return ((q.x-p.x)*(t.y-s.y)-(q.y-p.y)*(t.x-s.x));
 	  }
