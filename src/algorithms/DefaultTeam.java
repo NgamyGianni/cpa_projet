@@ -186,7 +186,7 @@ import supportGUI.Circle;
 				double x = (R.get(0).x + R.get(1).x) * 0.5;
 				double y = (R.get(0).y + R.get(1).y) * 0.5;
 				Point circleCenter = new Point((int)x,(int)y);
-				int r = (int) distanceTo(circleCenter,R.get(0));
+				int r = (int) distance2Points(circleCenter,R.get(0));
 				D = new Circle(circleCenter, r);
 			}
 			else if (P.size() == 1 && R.isEmpty()) {
@@ -197,7 +197,7 @@ import supportGUI.Circle;
 				double x = (R.get(0).x + R.get(0).x) * 0.5;
 				double y = (R.get(0).y + R.get(0).y) * 0.5;
 				Point circleCenter = new Point((int)x,(int)y);
-				int r = (int) distanceTo(circleCenter,R.get(0));
+				int r = (int) distance2Points(circleCenter,R.get(0));
 				D = new Circle(circleCenter, r);			}
 			else {
 				Point p = P.remove(random.nextInt(P.size()));
@@ -240,19 +240,19 @@ import supportGUI.Circle;
 	      return ((q.x-p.x)*(t.y-s.y)-(q.y-p.y)*(t.x-s.x));
 	  }
 	  
-		private double distanceSquaredTo(Point p1, Point p2) {
+		private double distanceCarre2Points(Point p1, Point p2) {
 			final double distX = p1.x - p2.x;
 			final double DY = p1.y - p2.y;
 			
 			return distX * distX + DY * DY;
 		}
 		
-		private double distanceTo(Point p1,Point p2) {
-			return Math.sqrt(distanceSquaredTo(p1,p2));
+		private double distance2Points(Point p1,Point p2) {
+			return Math.sqrt(distanceCarre2Points(p1,p2));
 		}
 		
 		private boolean containsPoint(Point p,Circle D) {
-			return distanceSquaredTo(p,D.getCenter()) <= D.getRadius() * D.getRadius();
+			return distanceCarre2Points(p,D.getCenter()) <= D.getRadius() * D.getRadius();
 		}
 	
 	}
