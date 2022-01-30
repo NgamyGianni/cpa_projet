@@ -271,6 +271,7 @@ public class DefaultTeam {
 		Circle D = B_MINIDISK(P, R);
 
 		if (isInside(D, p)) {
+			System.out.println("I finished");
 			return D;
 		}
 		R.add(p);
