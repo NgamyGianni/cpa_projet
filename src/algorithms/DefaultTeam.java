@@ -88,9 +88,9 @@ import supportGUI.Circle;
 	      return null;
 	    }
 	    
-	    //return minCircleNaif(points);
+	    return minCircleNaif(points);
 	    
-	    return B_MINIDISK(tri(points), new ArrayList<Point>());
+	    //return B_MINIDISK(tri(points), new ArrayList<Point>());
 		
 	  }
 	  
@@ -150,6 +150,8 @@ import supportGUI.Circle;
 		    
 		    Point center = new Point((int)((c.getY() * B - b.getY() * C) / (2 * D)),
 		             (int)((b.getX() * C - c.getX() * B) / (2 * D))) ;
+		    
+		    center.setLocation(center.getX()+a.getX(), center.getY() + a.getY());
 		    		    
 		    return new Circle(center, (int)center.distance(a));
 	  }
@@ -164,8 +166,6 @@ import supportGUI.Circle;
 			  	Point p = P.get((random.nextInt(P.size())));
 
 				P.remove(p);
-				System.out.println("P1 = " + P.size());
-				System.out.println("R1 = " + R.size());
 				D = B_MINIDISK(P, R);
 					
 				if(Math.pow(D.getCenter().getX() - p.getX(), 2) + Math.pow(D.getCenter().getY()-p.getY(), 2) > D.getRadius() * D.getRadius()) {
@@ -180,13 +180,12 @@ import supportGUI.Circle;
 							}
 						}
 						R.remove(miniIndex);
+						R.remove(0);
 					}
 					D = B_MINIDISK(P, R);
 				}
 			  
 		  }
-		  System.out.println("P = " + P.size());
-		  System.out.println("R = " + R.size());
 		  return D;
 	  }
 	
