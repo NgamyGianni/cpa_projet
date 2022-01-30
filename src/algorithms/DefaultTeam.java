@@ -53,43 +53,25 @@ public class DefaultTeam {
 	}
 
 	private ArrayList<Point> tri(ArrayList<Point> points) {
-		int maxX = points.get(0).x;
-		for (Point p : points)
-			if (p.x > maxX)
-				maxX = p.x;
+		if (points.size()<4) return points;
+        int maxX=points.get(0).x;
+        for (Point p: points) if (p.x>maxX) maxX=p.x;
+        Point[] maxY = new Point[maxX+1];
+        Point[] minY = new Point[maxX+1];
+		System.out.println("avant du tri de taille "+points.size());
+		for (Point p:points) System.out.println("Valeur point x= "+p.x+" y= "+p.y);
+        for (Point p: points) {
+            if (maxY[p.x]==null||p.y>maxY[p.x].y) maxY[p.x]=p;
+            if (minY[p.x]==null||p.y<minY[p.x].y) minY[p.x]=p;
+        }
+        ArrayList<Point> result = new ArrayList<Point>();
+        for (int i=0;i<maxX+1;i++) if (maxY[i]!=null) result.add(maxY[i]);
+        for (int i=maxX;i>=0;i--) if (minY[i]!=null && !result.get(result.size()-1).equals(minY[i])) result.add(minY[i]);
 
-		Point[] puitsMin = new Point[maxX + 1];
-		Point[] puitsMax = new Point[maxX + 1];
-
-		for (Point p : points) {
-			if (puitsMin[p.x] == null)
-				puitsMin[p.x] = p;
-			else {
-				if (puitsMin[p.x].y < p.y) {
-					puitsMin[p.x] = p;
-				}
-			}
-			if (puitsMax[p.x] == null)
-				puitsMax[p.x] = p;
-			else {
-				if (puitsMax[p.x].y > p.y) {
-					puitsMax[p.x] = p;
-				}
-			}
-		}
-
-		ArrayList<Point> result = new ArrayList<Point>();
-		for (int i = 0; i < maxX + 1; i++)
-			if (puitsMax[i] != null)
-				result.add(puitsMax[i]);
-		for (int i = maxX; i >= 0; i--)
-			if (puitsMin[i] != null && !result.get(result.size() - 1).equals(puitsMin[i]))
-				result.add(puitsMin[i]);
-
-		if (result.get(result.size() - 1).equals(result.get(0)))
-			result.remove(result.size() - 1);
-
-		return result;
+        if (result.get(result.size()-1).equals(result.get(0))) result.remove(result.size()-1);
+		System.out.println("Valeur result "+result.size());
+		for (int i=0;i<result.size();i++) System.out.println("Valeur relt pt x= "+result.get(i).x+" y= "+result.get(i).y);
+        return result;
 	}
 
 	// 1 ET 2
@@ -100,14 +82,16 @@ public class DefaultTeam {
 			return null;
 		}
 		// REPONSE A LA QUESTION 1
-		// return minCircleNaif(points);
+		System.out.println("size points "+tri(points).size());
+		//return minCircleNaif(points);
 
 		// 2 REPONSE A LA QUESTION 2
-		return B_MINIDISK(tri(points), new ArrayList<Point>());
+		return B_MINIDISK(points, new ArrayList<Point>());
 
 	}
 
 	private Circle minCircleNaif(ArrayList<Point> points) {
+		
 		Point center = points.get(0).getLocation();
 		int radius = 100;
 		Circle c = new Circle(center, radius);
@@ -201,9 +185,10 @@ public class DefaultTeam {
 	private Circle circle_from(Point A, Point B, Point C) {
 		Point I = get_circle_center(B.x - A.x, B.y - A.y,
 				C.x - A.x, C.y - A.y);
-
+		System.out.println("value before I.x "+I.x+" I.y "+I.y);
 		I.x += A.x;
 		I.y += A.y;
+		System.out.println("value after I.x "+I.x+" I.y "+I.y);
 		return new Circle(I, (int) (dist(I, A)));
 
 	}
@@ -257,8 +242,8 @@ public class DefaultTeam {
 		// Circle D = null;
 		Random random = new Random();
 
-		System.out.println("P = " + P.size());
-		System.out.println("R = " + R.size());
+		System.out.println("P size = " + P.size());
+		System.out.println("R size = " + R.size());
 
 		if (P.size() == 0 || R.size() == 3)
 			return min_circle_trivial(R);
