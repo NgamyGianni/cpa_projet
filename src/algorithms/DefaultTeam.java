@@ -3,7 +3,6 @@ package algorithms;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
-
 import supportGUI.Circle;
 import supportGUI.Line;
 
@@ -80,10 +79,10 @@ public class DefaultTeam {
 		}
 		// REPONSE A LA QUESTION 1
 		System.out.println("size points "+tri(points).size());
-		//return minCircleNaif(points);
+		return minCircleNaif(points);
 
 		// 2 REPONSE A LA QUESTION 2
-		return B_MINIDISK(tri(points), new ArrayList<Point>());
+		//return B_MINIDISK(tri(points), new ArrayList<Point>());
 
 	}
 
@@ -166,7 +165,7 @@ public class DefaultTeam {
 	private double dist(Point p, Point q) {
 		return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y));
 	}
-
+	//Cicle c debut
 	private boolean isInside(Circle c, Point p) {
 		return dist(c.getCenter(), p) <= c.getRadius();
 	}
@@ -178,17 +177,18 @@ public class DefaultTeam {
 		double D = bx * cy - by * cx;
 		// int centerX=(int)((cy * B - by * C) / (2.0 * D));
 		Point center = new Point((int) ((cy * B - by * C) / (2.0 * D)), (int) ((bx * C - cx * B) / (2.0 * D)));
+		
 		return center;
 	}
 
 	private Circle circle_from(Point A, Point B, Point C) {
-		Point I = get_circle_center(B.x - A.x, B.y - A.y,
-				C.x - A.x, C.y - A.y);
-		System.out.println("value before I.x "+I.x+" I.y "+I.y);
+		Point I = get_circle_center(B.x - A.x, B.y - A.y,C.x - A.x, C.y - A.y);
+		
 		I.x += A.x;
 		I.y += A.y;
-		System.out.println("value after I.x "+I.x+" I.y "+I.y);
+		
 		return new Circle(I, (int) (dist(I, A)));
+		// return new Circle2D(I,  dist(I, A));
 
 	}
 
@@ -202,6 +202,7 @@ public class DefaultTeam {
 
 	// Function to check whether a circle
 	// encloses the given points
+	// Circle
 	private boolean is_valid_circle(Circle c, ArrayList<Point> P) {
 		// Iterating through all the points
 		// to check whether the points
@@ -216,19 +217,14 @@ public class DefaultTeam {
 	// circle for N <= 3
 	private Circle min_circle_trivial(ArrayList<Point> P) {
 		assert (P.size() <= 3);
-		if (P.size() == 0) {
-			return new Circle(new Point(), 0);
-		} else if (P.size() == 1) {
-			return new Circle(P.get(0), 0);
-		} else if (P.size() == 2) {
-			return circle_from(P.get(0), P.get(1));
-		}
+		if (P.size() == 0) {return new Circle(new Point(), 0);} 
+		else if (P.size() == 1) {return new Circle(P.get(0), 0);} 
+		else if (P.size() == 2) {return circle_from(P.get(0), P.get(1));}
 
 		// To check if MEC can be determined
 		// by 2 points only
 		for (int i = 0; i < 3; i++) {
 			for (int j = i + 1; j < 3; j++) {
-
 				Circle c = circle_from(P.get(i), P.get(j));
 				if (is_valid_circle(c, P))
 					return c;
@@ -240,7 +236,7 @@ public class DefaultTeam {
 	public Circle B_MINIDISK(ArrayList<Point> P, ArrayList<Point> R) {
 		Random random = new Random();
 		if (P.size()==0 || R.size() == 3 || R.size()==2){return min_circle_trivial(R);}
-		else if(P.size() == 0 && R.size() == 2){return min_circle_trivial(R);}
+		// else if(P.size() == 0 && R.size() == 2){return min_circle_trivial(R);}
 		else if(P.size() == 1 && R.size() == 0){return min_circle_trivial(P);}
 		else if(P.size() == 1 && R.size() == 1){
 			R.add(P.get(0));
@@ -248,8 +244,6 @@ public class DefaultTeam {
 		Point p = P.get((random.nextInt(P.size())));
 		// ArrayList<Point> tmpP = new ArrayList<Point>();
 		P.remove(p);
-		System.out.println("P1 = " + P.size());
-		System.out.println("R1 = " + R.size());
 		Circle D = B_MINIDISK(P, R);
 		if (isInside(D, p)) {
 			System.out.println("I finished");
