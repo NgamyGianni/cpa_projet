@@ -100,7 +100,8 @@ public class DefaultTeam {
 				int x = (int) (p.getX() + q.getX()) / 2;
 				int y = (int) (p.getY() + q.getY()) / 2;
 				radius = (int) Math.sqrt(
-						(q.getX() - p.getX()) * (q.getX() - p.getX()) + (q.getY() - p.getY()) * (q.getY() - p.getY()));
+						(q.getX() - p.getX()) * (q.getX() - p.getX()) + 
+						(q.getY() - p.getY()) * (q.getY() - p.getY()));
 				center.setLocation(x, y);
 				c = new Circle(center, radius);
 				boolean allPoints = true;
@@ -171,6 +172,7 @@ public class DefaultTeam {
 	}
 
 	private Point get_circle_center(double bx, double by, double cx, double cy) {
+		
 		double B = bx * bx + by * by;
 		double C = cx * cx + cy * cy;
 		double D = bx * cy - by * cx;
@@ -236,12 +238,7 @@ public class DefaultTeam {
 	}
 
 	public Circle B_MINIDISK(ArrayList<Point> P, ArrayList<Point> R) {
-		// Circle D = null;
 		Random random = new Random();
-
-		// System.out.println("P size = " + P.size());
-		// System.out.println("R size = " + R.size());
-
 		if (P.size()==0 || R.size() == 3 || R.size()==2){return min_circle_trivial(R);}
 		else if(P.size() == 0 && R.size() == 2){return min_circle_trivial(R);}
 		else if(P.size() == 1 && R.size() == 0){return min_circle_trivial(P);}
@@ -250,20 +247,15 @@ public class DefaultTeam {
 			return min_circle_trivial(R);}
 		Point p = P.get((random.nextInt(P.size())));
 		// ArrayList<Point> tmpP = new ArrayList<Point>();
-
 		P.remove(p);
 		System.out.println("P1 = " + P.size());
 		System.out.println("R1 = " + R.size());
 		Circle D = B_MINIDISK(P, R);
-
 		if (isInside(D, p)) {
 			System.out.println("I finished");
 			return D;
 		}
 		R.add(p);
-
-		// System.out.println("P = " + P.size());
-		// System.out.println("R = " + R.size());
 		return B_MINIDISK(P, R);
 	}
 
