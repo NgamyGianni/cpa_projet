@@ -10,7 +10,7 @@ import supportGUI.Circle;
 	public class DefaultTeam {
 	
 	  // calculDiametre: ArrayList<Point> --> Line
-	  //   renvoie une pair de points de la liste, de distance maximum.
+	  //   renvoie une paire de points de la liste, de distance maximum.
 	  public Line calculDiametre(ArrayList<Point> points) {
 	    if (points.size()<3) {
 	      return null;
@@ -39,7 +39,7 @@ import supportGUI.Circle;
 	  }
 	
 	  // calculDiametreOptimise: ArrayList<Point> --> Line
-	  //   renvoie une pair de points de la liste, de distance maximum.
+	  //   renvoie une paire de points de la liste, de distance maximum.
 	  public Line calculDiametreOptimise(ArrayList<Point> points) {
 	    if (points.size()<3) {
 	      return null;
@@ -98,7 +98,7 @@ import supportGUI.Circle;
 		  Point center=points.get(0).getLocation();
 		  int radius=100;
 		  Circle c = new Circle(center, radius);
-		    
+
 		  for(int i=0; i < points.size(); i++) {
 			  for(int j=i+1; j < points.size(); j++) {
 				  Point p = points.get(i);
@@ -154,30 +154,65 @@ import supportGUI.Circle;
 		  Circle D = null;
 		  Random random = new Random();
 		  
-		  System.out.println("P = " + P.size());
-		  System.out.println("R = " + R.size());
-
-		  if(P.size() == 0) {
-			  return b_md(P, R);
-		  }else {
-			  	Point p = P.get((random.nextInt(P.size())));
-				//ArrayList<Point> tmpP = new ArrayList<Point>();
-				  
-				P.remove(p);
-				System.out.println("P1 = " + P.size());
-				System.out.println("R1 = " + R.size());
+//		  System.out.println("P = " + P.size());
+//		  System.out.println("R = " + R.size());
+//
+//		  if(P.size() == 0) {
+//			  return b_md(P, R);
+//		  }else {
+//			  	Point p = P.get((random.nextInt(P.size())));
+//				//ArrayList<Point> tmpP = new ArrayList<Point>();
+//				  
+//				P.remove(p);
+//				System.out.println("P1 = " + P.size());
+//				System.out.println("R1 = " + R.size());
+//				D = B_MINIDISK(P, R);
+//					
+//				if(Math.pow(D.getCenter().getX() - p.getX(), 2) + Math.pow(D.getCenter().getY()-p.getY(), 2) > D.getRadius() * D.getRadius()) {
+//					R.add(p);
+//					D = B_MINIDISK(P, R);	  
+//				}
+//			  
+//		  }
+//		  System.out.println("P = " + P.size());
+//		  System.out.println("R = " + R.size());
+//		  return D;
+//		  
+		  			
+			if (R.size() == 3) {
+				D = UsefulFunction.CircleWith3Points(R.get(0), R.get(1), R.get(2));
+			}
+			else if (P.isEmpty() && R.size() == 2) {
+				double x = (R.get(0).x + R.get(1).x) * 0.5;
+				double y = (R.get(0).y + R.get(1).y) * 0.5;
+				Point circleCenter = new Point((int)x,(int)y);
+				int r = (int) distanceTo(circleCenter,R.get(0));
+				D = new Circle(circleCenter, r);
+			}
+			else if (P.size() == 1 && R.isEmpty()) {
+				Point centerCircle = new Point(P.get(0).x, P.get(0).y);
+				D = new Circle(centerCircle, 0);
+			}
+			else if (P.size() == 1 && R.size() == 1) {
+				double x = (R.get(0).x + R.get(0).x) * 0.5;
+				double y = (R.get(0).y + R.get(0).y) * 0.5;
+				Point circleCenter = new Point((int)x,(int)y);
+				int r = (int) distanceTo(circleCenter,R.get(0));
+				D = new Circle(circleCenter, r);			}
+			else {
+				Point p = P.remove(random.nextInt(P.size()));
 				D = B_MINIDISK(P, R);
-					
-				if(Math.pow(D.getCenter().getX() - p.getX(), 2) + Math.pow(D.getCenter().getY()-p.getY(), 2) > D.getRadius() * D.getRadius()) {
+				
+				if (D != null && ! containsPoint(p,D)) {
 					R.add(p);
-					D = B_MINIDISK(P, R);	  
+					D = B_MINIDISK(P, R);
+					R.remove(p);
+					P.add(p);
 				}
-			  
-		  }
-		  System.out.println("P = " + P.size());
-		  System.out.println("R = " + R.size());
-		  return D;
-	  }
+			}
+					
+			return D;
+	    }
 	
 	  // enveloppeConvexe: ArrayList<Point> --> ArrayList<Point>
 	  //   renvoie l'enveloppe convexe de la liste.
@@ -204,5 +239,20 @@ import supportGUI.Circle;
 	  private double crossProduct(Point p, Point q, Point s, Point t){
 	      return ((q.x-p.x)*(t.y-s.y)-(q.y-p.y)*(t.x-s.x));
 	  }
+	  
+		private double distanceSquaredTo(Point p1, Point p2) {
+			final double distX = p1.x - p2.x;
+			final double DY = p1.y - p2.y;
+			
+			return distX * distX + DY * DY;
+		}
+		
+		private double distanceTo(Point p1,Point p2) {
+			return Math.sqrt(distanceSquaredTo(p1,p2));
+		}
+		
+		private boolean containsPoint(Point p,Circle D) {
+			return distanceSquaredTo(p,D.getCenter()) <= D.getRadius() * D.getRadius();
+		}
 	
 	}
