@@ -58,8 +58,6 @@ public class DefaultTeam {
         for (Point p: points) if (p.x>maxX) maxX=p.x;
         Point[] maxY = new Point[maxX+1];
         Point[] minY = new Point[maxX+1];
-		System.out.println("avant du tri de taille "+points.size());
-		for (Point p:points) System.out.println("Valeur point x= "+p.x+" y= "+p.y);
         for (Point p: points) {
             if (maxY[p.x]==null||p.y>maxY[p.x].y) maxY[p.x]=p;
             if (minY[p.x]==null||p.y<minY[p.x].y) minY[p.x]=p;
@@ -69,8 +67,7 @@ public class DefaultTeam {
         for (int i=maxX;i>=0;i--) if (minY[i]!=null && !result.get(result.size()-1).equals(minY[i])) result.add(minY[i]);
 
         if (result.get(result.size()-1).equals(result.get(0))) result.remove(result.size()-1);
-		System.out.println("Valeur result "+result.size());
-		for (int i=0;i<result.size();i++) System.out.println("Valeur relt pt x= "+result.get(i).x+" y= "+result.get(i).y);
+
         return result;
 	}
 
@@ -86,7 +83,7 @@ public class DefaultTeam {
 		//return minCircleNaif(points);
 
 		// 2 REPONSE A LA QUESTION 2
-		return B_MINIDISK(points, new ArrayList<Point>());
+		return B_MINIDISK(tri(points), new ArrayList<Point>());
 
 	}
 
@@ -242,11 +239,15 @@ public class DefaultTeam {
 		// Circle D = null;
 		Random random = new Random();
 
-		System.out.println("P size = " + P.size());
-		System.out.println("R size = " + R.size());
+		// System.out.println("P size = " + P.size());
+		// System.out.println("R size = " + R.size());
 
-		if (P.size() == 0 || R.size() == 3)
-			return min_circle_trivial(R);
+		if (P.size()==0 || R.size() == 3 || R.size()==2){return min_circle_trivial(R);}
+		else if(P.size() == 0 && R.size() == 2){return min_circle_trivial(R);}
+		else if(P.size() == 1 && R.size() == 0){return min_circle_trivial(P);}
+		else if(P.size() == 1 && R.size() == 1){
+			R.add(P.get(0));
+			return min_circle_trivial(R);}
 		Point p = P.get((random.nextInt(P.size())));
 		// ArrayList<Point> tmpP = new ArrayList<Point>();
 
@@ -261,8 +262,8 @@ public class DefaultTeam {
 		}
 		R.add(p);
 
-		System.out.println("P = " + P.size());
-		System.out.println("R = " + R.size());
+		// System.out.println("P = " + P.size());
+		// System.out.println("R = " + R.size());
 		return B_MINIDISK(P, R);
 	}
 
