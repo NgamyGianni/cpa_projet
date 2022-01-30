@@ -126,7 +126,6 @@ import supportGUI.Circle;
 			  if(R.size() == 0)	D = new Circle(new Point(), 0);
 			  if(R.size() == 1) D = new Circle(R.get(0), 0);
 			  if(R.size() == 2)	{
-				  System.out.println("2");
 				  Point p = R.get(0);
 				  Point q = R.get(1);
 				  int x = (int)(p.getX() + q.getX())/2;
@@ -136,7 +135,6 @@ import supportGUI.Circle;
 				  D =  new Circle(center, radius);
 			  }
 			  if(R.size() == 3) {
-				  System.out.println("3");
 				  D = getCircleFrom3Points(R.get(0), R.get(1), R.get(2));
 			  }
 		  }
@@ -152,9 +150,7 @@ import supportGUI.Circle;
 		    
 		    Point center = new Point((int)((c.getY() * B - b.getY() * C) / (2 * D)),
 		             (int)((b.getX() * C - c.getX() * B) / (2 * D))) ;
-		    
-		    //center.setLocation(center.getX()+a.getX(), center.getY() + a.getY());
-		    
+		    		    
 		    return new Circle(center, (int)center.distance(a));
 	  }
 	  
@@ -184,7 +180,6 @@ import supportGUI.Circle;
 							}
 						}
 						R.remove(miniIndex);
-						//R.remove(R.get(0));
 					}
 					D = B_MINIDISK(P, R);
 				}
